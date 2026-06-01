@@ -35,8 +35,6 @@ const successMessage =
 
 let cart = [];
 
-
-
 // =========================
 // FUNCIONES CARRITO
 // =========================
