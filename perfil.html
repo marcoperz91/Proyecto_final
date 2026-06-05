@@ -195,6 +195,10 @@
             color: #166534;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         @media(max-width:1000px) {
 
             .profile-layout {
@@ -233,15 +237,15 @@
 
                 <div class="menu">
 
-                    <button>
+                    <button id="btnPerfil">
                         Mi perfil
                     </button>
 
-                    <button>
+                    <button id="btnPedidos">
                         Pedidos
                     </button>
 
-                    <button>
+                    <button id="btnFavoritos">
                         Favoritos
                     </button>
 
@@ -255,7 +259,7 @@
 
             <main class="main">
 
-                <section class="card">
+                <section class="card" id="perfil">
 
                     <h2>Editar perfil</h2>
 
@@ -307,7 +311,7 @@
 
                 </section>
 
-                <section class="card">
+                <section class="card" id="favoritos">
 
                     <h2>Favoritos</h2>
 
@@ -319,7 +323,7 @@
 
                 </section>
 
-                <section class="card">
+                <section class="card" id="pedidos">
 
                     <h2>Mis pedidos</h2>
 
@@ -380,6 +384,10 @@
 
                 phone: phone.value,
 
+                address: {
+                    city: city.value
+                },
+
                 name: {
                     firstname: firstname.value,
                     lastname: lastname.value
@@ -390,9 +398,19 @@
                 'https://fakestoreapi.com/users/1',
                 {
                     method: 'PUT',
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
                     body: JSON.stringify(body)
                 }
             );
+
+            currentUser = {
+                ...currentUser,
+                ...body
+            };
+
+            renderUser(currentUser);
 
             document.getElementById("message").style.display =
                 "block";
@@ -562,6 +580,43 @@
                 .getElementById("logoutBtn")
                 .addEventListener("click",
                     logout);
+
+            document
+                .getElementById("btnPerfil")
+                .addEventListener("click", () => {
+
+                    document
+                        .getElementById("perfil")
+                        .scrollIntoView({
+                            behavior: "smooth"
+                        });
+
+                });
+
+            document
+                .getElementById("btnFavoritos")
+                .addEventListener("click", () => {
+
+                    document
+                        .getElementById("favoritos")
+                        .scrollIntoView({
+                            behavior: "smooth"
+                        });
+
+                });
+
+            document
+                .getElementById("btnPedidos")
+                .addEventListener("click", () => {
+
+                    document
+                        .getElementById("pedidos")
+                        .scrollIntoView({
+                            behavior: "smooth"
+                        });
+
+                });
+
         }
 
         function init() {
