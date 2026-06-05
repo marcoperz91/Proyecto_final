@@ -282,6 +282,14 @@
 
         let currentProduct = null;
 
+        let favorites = JSON.parse(
+            localStorage.getItem("favorites")
+        ) || [];
+
+        let cart = JSON.parse(
+            localStorage.getItem("cart")
+        ) || [];
+
 
         // =========================
         // PRODUCTO
@@ -332,8 +340,45 @@
             document.querySelector('.rating').innerHTML =
                 `⭐ ${product.rating.rate}
          <span>(${product.rating.count} reviews)</span>`;
+
+            const favoriteBtn =
+                document.getElementById("favoriteBtn");
+
+            const isFavorite =
+                favorites.some(fav => fav.id === product.id);
+
+            favoriteBtn.textContent =
+                isFavorite ? "❤️" : "🤍";
         }
 
+        function addToFavorites() {
+
+            const favoriteBtn =
+                document.getElementById("favoriteBtn");
+
+            const index =
+                favorites.findIndex(
+                    fav => fav.id === currentProduct.id
+                );
+
+            if (index === -1) {
+
+                favorites.push(currentProduct);
+
+                favoriteBtn.textContent = "❤️";
+
+            } else {
+
+                favorites.splice(index, 1);
+
+                favoriteBtn.textContent = "🤍";
+            }
+
+            localStorage.setItem(
+                "favorites",
+                JSON.stringify(favorites)
+            );
+        }
 
         // =========================
         // RELACIONADOS
@@ -392,6 +437,29 @@
 
         function addToCart() {
 
+            const cartItem = cart.find(
+                item => item.id === currentProduct.id
+            );
+
+            if (cartItem) {
+
+                cartItem.quantity += 1;
+
+            } else {
+
+                cart.push({
+                    ...currentProduct,
+                    quantity: 1
+                });
+
+            }
+
+            localStorage.setItem(
+                "cart",
+                JSON.stringify(cart)
+            );
+
+            alert("Producto añadido al carrito");
         }
 
 
@@ -399,23 +467,35 @@
         // FAVORITOS
         // =========================
 
-        function addToFavorites() {
 
-        }
+
 
 
         // =========================
         // EVENTOS
         // =========================
 
-        function initEvents() {
-
-        }
-
-
         // =========================
         // INIT
         // =========================
+
+        function initEvents() {
+
+            document
+                .getElementById("favoriteBtn")
+                .addEventListener(
+                    "click",
+                    addToFavorites
+                );
+
+            document
+                .getElementById("addToCartBtn")
+                .addEventListener(
+                    "click",
+                    addToCart
+                );
+
+        }
 
         function init() {
 
