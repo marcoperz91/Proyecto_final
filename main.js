@@ -100,6 +100,13 @@ function renderProducts(productsArray) {
       addToCart(product.id);
     });
 
+    imageProduct.style.cursor = "pointer";
+
+    imageProduct.addEventListener("click", () => {
+      window.location.href =
+        `detalle.html?id=${product.id}`;
+    });
+
     contenedorImagen.appendChild(imageProduct);
     buttons.appendChild(addBtn);
     buttons.appendChild(favBtn);
