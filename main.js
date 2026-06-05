@@ -1,8 +1,3 @@
-/*
-========================================
-MINI ECOMMERCE - CÓDIGO COMPLETO INTEGRADO
-========================================
-*/
 
 // ========================================
 // VARIABLES GLOBALES
@@ -32,14 +27,14 @@ function getProducts() {
     })
     .then(data => {
       products = data;
-      filteredProducts = [...data]; 
-      
+      filteredProducts = [...data];
+
       renderCategories(products);
       renderProducts(products);
       renderCart(); // Renderiza el carrito si había datos guardados
     })
     .catch(error => console.error("Error fetching products:", error));
-    console.log(favorites);
+  console.log(favorites);
 }
 
 // ========================================
@@ -47,7 +42,7 @@ function getProducts() {
 // ========================================
 function renderProducts(productsArray) {
   const container = document.getElementById("productsContainer");
-  
+
   if (container) {
     container.innerHTML = "";
   } else {
@@ -108,7 +103,7 @@ function renderProducts(productsArray) {
     contenedorImagen.appendChild(imageProduct);
     buttons.appendChild(addBtn);
     buttons.appendChild(favBtn);
-    
+
     info.appendChild(categoryProduct);
     info.appendChild(titleProduct);
     info.appendChild(priceProduct);
@@ -130,7 +125,7 @@ function renderCategories(productsArray) {
 
   selectElement.innerHTML = '<option value="all">Todas las categorías</option>';
   const categories = [...new Set(productsArray.map(producto => producto.category))];
-  
+
   categories.forEach(categoria => {
     const opcion = document.createElement("option");
     opcion.value = categoria;
@@ -228,7 +223,7 @@ function removeFromCart(productId) {
 function renderCart() {
   const cartWrapper = document.getElementById("cartContainer");
   const totalWrapper = document.getElementById("cartTotal");
-  
+
   if (!cartWrapper) return;
   cartWrapper.innerHTML = "";
 
@@ -294,3 +289,120 @@ document.addEventListener("DOMContentLoaded", () => {
 
   getProducts();
 });
+
+// ========================================
+// LOGIN + SESIÓN
+// ========================================
+
+const accountBtn = document.querySelector(".account-btn");
+const loginModal = document.getElementById("loginModal");
+const closeLogin = document.getElementById("closeLogin");
+const loginForm = document.getElementById("loginForm");
+
+// Si ya existe token guardado
+if (sessionStorage.getItem("token")) {
+
+  accountBtn.textContent = "Cerrar sesión";
+
+  const savedUser = sessionStorage.getItem("username");
+
+  if (savedUser && welcomeUser) {
+    welcomeUser.textContent = `Bienvenido ${savedUser}`;
+  }
+
+}
+
+// Abrir login o cerrar sesión
+if (accountBtn) {
+
+  accountBtn.addEventListener("click", () => {
+
+    if (sessionStorage.getItem("token")) {
+
+      sessionStorage.removeItem("token");
+
+      accountBtn.textContent = "Mi cuenta";
+
+      alert("Sesión cerrada");
+
+      return;
+    }
+
+    loginModal.classList.remove("hidden");
+
+  });
+
+}
+
+// Cerrar modal
+if (closeLogin) {
+
+  closeLogin.addEventListener("click", () => {
+
+    loginModal.classList.add("hidden");
+
+  });
+
+}
+
+// Login Fake Store API
+if (loginForm) {
+
+  loginForm.addEventListener("submit", (e) => {
+
+    e.preventDefault();
+
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+
+    fetch("https://fakestoreapi.com/auth/login", {
+
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json"
+      },
+
+      body: JSON.stringify({
+        username,
+        password
+      })
+
+    })
+      .then(res => res.json())
+
+      .then(data => {
+
+        if (data.token) {
+
+          sessionStorage.setItem("token", data.token);
+
+          sessionStorage.setItem("username", username);
+
+          if (welcomeUser) {
+            welcomeUser.textContent = `Bienvenido ${username}`;
+          }
+
+          accountBtn.textContent = "Cerrar sesión";
+
+          loginModal.classList.add("hidden");
+
+        } else {
+
+          alert("Usuario o contraseña incorrectos");
+
+        }
+
+      })
+
+      .catch(error => {
+
+        console.error(error);
+
+        alert("Error al iniciar sesión");
+
+      });
+
+  });
+
+}
